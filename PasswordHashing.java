@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package farm_manager;
 
-/**
- *
- * @author Okello John
- */
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -18,20 +9,18 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordHashing {
-     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException 
-	{
-		String  originalPassword = "password";
-		String generatedSecuredPasswordHash = generateStrongPasswordHash(originalPassword);
-		System.out.println(generatedSecuredPasswordHash);
-		
-//              Checking if the two passwords Match
-		boolean matched = validatePassword("password", generatedSecuredPasswordHash);
-		System.out.println(matched);
-		
-//               Checking if the two passwords Match
-//		matched = validatePassword("password1", generatedSecuredPasswordHash);
+//        public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException 
+//	{
+//		String  originalPassword = "password";
+//		String generatedSecuredPasswordHash = generateStrongPasswordHash(originalPassword);
+//		System.out.println(generatedSecuredPasswordHash);
+//                // Checking if the two passwords Match
+//		boolean matched = validatePassword("password", generatedSecuredPasswordHash);
 //		System.out.println(matched);
-	}
+//                //  Checking if the two passwords Match
+//		matched = validatePassword("password", generatedSecuredPasswordHash);
+//                System.out.println(matched);
+//	}
 	
 	public static boolean validatePassword(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
 	{
@@ -43,7 +32,6 @@ public class PasswordHashing {
 		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 		byte[] testHash = skf.generateSecret(spec).getEncoded();
 		int diff = hash.length ^ testHash.length;
-		
 		for(int i = 0; i < hash.length && i < testHash.length; i++)
 		{
 			diff |= hash[i] ^ testHash[i];
@@ -60,7 +48,6 @@ public class PasswordHashing {
 		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 		byte[] hash = skf.generateSecret(spec).getEncoded();
 		return iterations + ":" + toHex(salt) + ":" + toHex(hash);
-				
 	}
 	
 	private static String getSalt() throws NoSuchAlgorithmException

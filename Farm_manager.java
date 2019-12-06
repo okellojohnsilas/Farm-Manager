@@ -1,5 +1,7 @@
 package farm_manager;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -214,8 +216,13 @@ public class Farm_manager extends Application {
         addUserGridpane.add(addUser_Button, 1, 16);
         Scene addUserScene = new Scene(addUserGridpane);
         addUser_Button.setOnAction((e) -> {
-            if (newUserPassword.getText() == null ? ConfirmNewUserPassword.getText() == null : newUserPassword.getText().equals(ConfirmNewUserPassword.getText())) {
-                farmer.AddUser(adduserfirstNameTextField.getText(), adduserlastNameTextField.getText(), adduserUserNameTextField.getText(), userTypeComboBox.getValue().toString(), newUserPassword.getText(), addusertelephoneNumberTextField.getText(), adduserfarmNameTextField.getText());
+            if (newUserPassword.getText() == null ? ConfirmNewUserPassword.getText() == null : newUserPassword.getText().equals(ConfirmNewUserPassword.getText())){
+                try{
+                    farmer.AddUser(adduserfirstNameTextField.getText(), adduserlastNameTextField.getText(), adduserUserNameTextField.getText(), userTypeComboBox.getValue().toString(), newUserPassword.getText(), addusertelephoneNumberTextField.getText(), adduserfarmNameTextField.getText()); 
+                }
+                catch (NoSuchAlgorithmException | InvalidKeySpecException adduserException) {
+                    adduserException.printStackTrace();
+                }
                 adduserfirstNameTextField.clear();
                 adduserlastNameTextField.clear();
                 adduserUserNameTextField.clear();
@@ -259,17 +266,23 @@ public class Farm_manager extends Application {
         loginGridpane.add(registerButton, 1, 6);
         Scene loginScene = new Scene(loginGridpane);
         loginButton.setOnAction((e) -> {
-            farmer.Login(usernameTextField.getText(), passwordTextField.getText());
-            if (farmer.getStatus() == true) {
+            try {
+                boolean isCurrentStatus = farmer.Login(usernameTextField.getText(), passwordTextField.getText());
+//                Checking if Login was successful
+                if (isCurrentStatus == true) {
                 try {
                     primarystage.setScene(testScene);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (Exception loginException) {
+                    loginException.printStackTrace();
                 }
-                usernameTextField.clear();
-                passwordTextField.clear();
-            } else {
-
+//                If the Login was unsuccessful
+                } else {
+                    primarystage.setScene(loginScene);
+                    usernameTextField.clear();
+                    passwordTextField.clear();
+                }
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                Logger.getLogger(Farm_manager.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         registerButton.setOnAction((e) -> {
