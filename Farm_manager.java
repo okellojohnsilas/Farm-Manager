@@ -1,8 +1,13 @@
 package farm_manager;
 
+import static java.lang.Integer.parseInt;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -13,6 +18,8 @@ import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 public class Farm_manager extends Application {
 
@@ -289,8 +296,44 @@ public class Farm_manager extends Application {
             primarystage.setScene(addUserScene);
         });
 //      ========================END OF LOGIN INTERFACE=============================================================================
-        primarystage.setScene(loginScene);
+//      ========================USERS TABLEVIEW INTERFACE==========================================================================
+//      Instantiate the tableview class using viewUserstableView object
+//        Button tableactionbutton = new Button();
+        TableView viewUserstableView = new TableView();
+        Constants DBconnection = new Constants();
+        Class.forName(DBconnection.getDriver());
+        Connection con = (Connection) DriverManager.getConnection(DBconnection.getDatabaseUrl(), DBconnection.getUser(), DBconnection.getPassword());
+        Statement stmt = (Statement) con.createStatement();
+        ResultSet rs = (ResultSet) stmt.executeQuery("SELECT * FROM `users`");
+        while (rs.next()){
+            String storedDbfName = rs.getString("FirstName");
+            String storedDblName = rs.getString("LastName");
+            String storedDbuName = rs.getString("userName");
+            String storedDbuType = rs.getString("userType");
+            String storedDbPhone = rs.getString("user_telephone_number");
+            String storedDbFarmName = rs.getString("Farm_Name");
+//        }
+            TableColumn<String, usersDisplay> column1 = new TableColumn<>("First Name");
+            column1.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
+            TableColumn<String, usersDisplay> column2 = new TableColumn<>("Last Name");
+            column2.setCellValueFactory(new PropertyValueFactory<>("LastName"));
+            TableColumn<String, usersDisplay> column3 = new TableColumn<>("Username");
+            column3.setCellValueFactory(new PropertyValueFactory<>("Username"));
+            TableColumn<String, usersDisplay> column4 = new TableColumn<>("Usertype");
+            column4.setCellValueFactory(new PropertyValueFactory<>("Usertype"));
+            TableColumn<String, usersDisplay> column5 = new TableColumn<>("Telephone Number");
+            column5.setCellValueFactory(new PropertyValueFactory<>("telephone_num"));
+            TableColumn<String, usersDisplay> column6 = new TableColumn<>("Farm Name");
+            column6.setCellValueFactory(new PropertyValueFactory<>("farm"));
+            viewUserstableView.getColumns().addAll(column1,column2,column3,column4,column5,column6);
+            viewUserstableView.getItems().addAll(new usersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName));
+        }
+        VBox usersvbox = new VBox(viewUserstableView);
+        Scene viewUsersScene = new Scene(usersvbox);
+//      ========================END OF USERS TABLEVIEW INTERFACE===================================================================
+        primarystage.setScene(viewUsersScene);
         primarystage.show();
+//        }
     }
 
     public static void main(String[] args) {

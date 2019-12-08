@@ -94,11 +94,17 @@ public class Users {
             System.out.println(e);
         }
     }
-
-    public static void main(String[] args) {
-        launch(args);
+    
+    public void removeUser(String Userid) {
     }
-
-    public void RemoveUser() {
+    public void viewUsers(){
+        try {
+            Class.forName(dbConn.getDriver());
+            Connection con = (Connection) DriverManager.getConnection(dbConn.getDatabaseUrl(), dbConn.getUser(), dbConn.getPassword());
+            Statement stmt = (Statement) con.createStatement();
+            ResultSet rs = (ResultSet) stmt.executeQuery("SELECT * FROM `users`");
+        }catch(Exception viewUserException){
+            viewUserException.printStackTrace();
+        }
     }
 }
