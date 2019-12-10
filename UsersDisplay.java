@@ -5,25 +5,29 @@
  */
 package farm_manager;
 
+import javafx.scene.control.Button;
+
 /**
  *
  * @author Okello John
  */
-public class usersDisplay {
+public class UsersDisplay {
     private String firstName = null;
     private String lastName = null;
     private String Username = null;
     private String Usertype = null;
     private String telephone_num = null;
     private String farm = null;
+    private Button editBtn;
 
-    public usersDisplay(String firstName, String lastName, String Username, String Usertype, String telephone_num, String farm) {
+    public UsersDisplay(String firstName, String lastName, String Username, String Usertype, String telephone_num, String farm, Button editBtn) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.Username = Username;
         this.Usertype = Usertype;
         this.telephone_num = telephone_num;
         this.farm = farm;
+        this.editBtn = editBtn;
     }
     
     public String getUsername() {
@@ -58,7 +62,7 @@ public class usersDisplay {
         this.farm = farm;
     }
 
-    public usersDisplay() {
+    public UsersDisplay() {
     }
 
     public String getFirstName() {

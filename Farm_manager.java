@@ -1,6 +1,5 @@
 package farm_manager;
 
-import static java.lang.Integer.parseInt;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
@@ -11,6 +10,8 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -20,11 +21,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 public class Farm_manager extends Application {
-
     @Override
     public void start(Stage primarystage) throws Exception {
+        Button returnBackToMenuButton = new Button("MENU");
 //      ========================BUY ANIMAL INTERFACE==============================================================  
 //      Text displayed
         Text firstusermessage = new Text("");
@@ -88,9 +90,10 @@ public class Farm_manager extends Application {
         initialgridpane.add(firstusermessage, 1, 14);
         initialgridpane.add(buyAnimalButton, 1, 16);
         initialgridpane.add(salesAnimalButton, 2, 16);
-        buyAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
-        salesAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
-        initialgridpane.setStyle("-fx-background-color:BEIGE;");
+        initialgridpane.add(returnBackToMenuButton, 2, 18);
+//        buyAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
+//        salesAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
+//        initialgridpane.setStyle("-fx-background-color:BEIGE;");
         Scene testScene = new Scene(initialgridpane);
 //      ========================END OF BUY ANIMAL INTERFACE==============================================================
 //      ========================SALE ANIMAL INTERFACE====================================================================
@@ -131,8 +134,9 @@ public class Farm_manager extends Application {
         salesgridpane.add(Secondusermessage, 1, 7);
         salesgridpane.add(saleAnimalButton, 1, 8);
         salesgridpane.add(backButton, 2, 8);
-        saleAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
-        backButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
+//        salesgridpane.add(returnBackToMenuButton, 2, 10);
+//        saleAnimalButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
+//        backButton.setStyle("-fx-background-color: darkslateblue; -fx-text-fill:white; -fx-font-size:13pt;");
         Scene salesScene = new Scene(salesgridpane);
         primarystage.setTitle("FARM MANAGER");
 //      ========================END OF SALE ANIMAL INTERFACE====================================================================
@@ -221,6 +225,7 @@ public class Farm_manager extends Application {
         addUserGridpane.add(addusertelephoneNumberTextField, 1, 12);
         addUserGridpane.add(adduserfarmNameTextField, 1, 14);
         addUserGridpane.add(addUser_Button, 1, 16);
+        addUserGridpane.add(returnBackToMenuButton, 1, 18);
         Scene addUserScene = new Scene(addUserGridpane);
         addUser_Button.setOnAction((e) -> {
             if (newUserPassword.getText() == null ? ConfirmNewUserPassword.getText() == null : newUserPassword.getText().equals(ConfirmNewUserPassword.getText())){
@@ -242,7 +247,37 @@ public class Farm_manager extends Application {
                 System.out.println("The passwords didnt match");
             }
         });
-//      ========================END OF ADD USER INTERFACE==========================================================================
+//      ========================END OF ADD USER INTERFACE=======================================================================
+//      ========================MENU INTERFACE=====================================================================================
+//        Buttons
+        Button addUserMenuButton = new Button("ADD USER");
+        Button removeUserMenuButton = new Button("REMOVE USER");
+        Button viewUserMenuButton = new Button("VIEW USER");
+        Button purchaseAnimalMenuButton = new Button("BUY ANIMAL");
+        Button removeAnimalMenuButton = new Button("REMOVE ANIMAL");
+        Button viewAnimalMenuButton = new Button("VIEW ANIMAL");
+        GridPane menuGridpane = new GridPane();
+//        Labels
+        Label welcomeLabel = new Label("Hello User");
+//      Setting up size of Grid pane
+        menuGridpane.setMinSize(600, 400);
+//      Setting the Padding
+        menuGridpane.setPadding(new Insets(10, 10, 10, 10));
+//      Setting the vertical and horizontal gaps between the columns
+        menuGridpane.setVgap(10);
+        menuGridpane.setHgap(10);
+//      Setting the grid alignment
+        menuGridpane.setAlignment(Pos.CENTER);
+//      Arranging all the nodes on the grid
+//        menuGridpane.add(welcomeLabel, 0, 1);
+        menuGridpane.add(addUserMenuButton, 1, 0);
+        menuGridpane.add(removeUserMenuButton, 1, 2);
+        menuGridpane.add(viewUserMenuButton, 2, 0);
+        menuGridpane.add(purchaseAnimalMenuButton, 2, 2);
+        menuGridpane.add(removeAnimalMenuButton, 1, 4);
+        menuGridpane.add(viewAnimalMenuButton, 2, 4);
+        Scene menuScene = new Scene(menuGridpane);
+//      ========================END OF MENU INTERFACE==============================================================================
 //      ========================LOGIN INTERFACE=================================================================================
 //        Text
         Text usernameText = new Text("USERNAME");
@@ -278,7 +313,7 @@ public class Farm_manager extends Application {
 //                Checking if Login was successful
                 if (isCurrentStatus == true) {
                 try {
-                    primarystage.setScene(testScene);
+                    primarystage.setScene(menuScene);
                 } catch (Exception loginException) {
                     loginException.printStackTrace();
                 }
@@ -293,18 +328,54 @@ public class Farm_manager extends Application {
             }
         });
         registerButton.setOnAction((e) -> {
-            primarystage.setScene(addUserScene);
+            primarystage.setScene(menuScene);
         });
 //      ========================END OF LOGIN INTERFACE=============================================================================
 //      ========================USERS TABLEVIEW INTERFACE==========================================================================
 //      Instantiate the tableview class using viewUserstableView object
-//        Button tableactionbutton = new Button();
         TableView viewUserstableView = new TableView();
         Constants DBconnection = new Constants();
         Class.forName(DBconnection.getDriver());
         Connection con = (Connection) DriverManager.getConnection(DBconnection.getDatabaseUrl(), DBconnection.getUser(), DBconnection.getPassword());
         Statement stmt = (Statement) con.createStatement();
         ResultSet rs = (ResultSet) stmt.executeQuery("SELECT * FROM `users`");
+        final ObservableList<UsersDisplay> users = FXCollections.observableArrayList();
+        TableColumn<UsersDisplay, String> column1 = new TableColumn<>("First Name");
+            column1.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("FirstName"));
+            TableColumn<UsersDisplay, String> column2 = new TableColumn<>("Last Name");
+            column2.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("LastName"));
+            TableColumn<UsersDisplay, String> column3 = new TableColumn<>("Username");
+            column3.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("Username"));
+            TableColumn<UsersDisplay, String> column4 = new TableColumn<>("Usertype");
+            column4.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("Usertype"));
+            TableColumn<UsersDisplay, String> column5 = new TableColumn<>("Telephone Number");
+            column5.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("telephone_num"));
+            TableColumn<UsersDisplay, String> column6 = new TableColumn<>("Farm Name");
+            column6.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("farm"));
+            TableColumn<UsersDisplay,Button> column7 = new TableColumn<>("Edit");
+            Callback<TableColumn<UsersDisplay,Button>, TableCell<UsersDisplay,Button>> cellFactory = new Callback<TableColumn<UsersDisplay,Button>, TableCell<UsersDisplay,Button>>(){
+                @Override
+                public TableCell call(final TableColumn<UsersDisplay,Button> param){
+                    final TableCell<UsersDisplay, String> cell = new TableCell<UsersDisplay, String>() {
+                    final Button editBtn = new Button("Edit");
+//                    editBtn.setOnAction((e) -> {});
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {                            
+                            setGraphic(editBtn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+                }
+            };
+            column7.setCellFactory(cellFactory);
+            viewUserstableView.getColumns().addAll(column1,column2,column3,column4,column5,column6,column7);
         while (rs.next()){
             String storedDbfName = rs.getString("FirstName");
             String storedDblName = rs.getString("LastName");
@@ -312,28 +383,45 @@ public class Farm_manager extends Application {
             String storedDbuType = rs.getString("userType");
             String storedDbPhone = rs.getString("user_telephone_number");
             String storedDbFarmName = rs.getString("Farm_Name");
-//        }
-            TableColumn<String, usersDisplay> column1 = new TableColumn<>("First Name");
-            column1.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
-            TableColumn<String, usersDisplay> column2 = new TableColumn<>("Last Name");
-            column2.setCellValueFactory(new PropertyValueFactory<>("LastName"));
-            TableColumn<String, usersDisplay> column3 = new TableColumn<>("Username");
-            column3.setCellValueFactory(new PropertyValueFactory<>("Username"));
-            TableColumn<String, usersDisplay> column4 = new TableColumn<>("Usertype");
-            column4.setCellValueFactory(new PropertyValueFactory<>("Usertype"));
-            TableColumn<String, usersDisplay> column5 = new TableColumn<>("Telephone Number");
-            column5.setCellValueFactory(new PropertyValueFactory<>("telephone_num"));
-            TableColumn<String, usersDisplay> column6 = new TableColumn<>("Farm Name");
-            column6.setCellValueFactory(new PropertyValueFactory<>("farm"));
-            viewUserstableView.getColumns().addAll(column1,column2,column3,column4,column5,column6);
-            viewUserstableView.getItems().addAll(new usersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName));
+            Button editBtn = new Button("Edit");
+            editBtn.setOnAction((e) -> {
+//               primarystage.setScene(editUserScene);  
+            });
+            UsersDisplay user = new UsersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName,editBtn);
+            users.add(user);            
+//            viewUserstableView.getItems().addAll(new UsersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName));
         }
+        viewUserstableView.setItems(users);
         VBox usersvbox = new VBox(viewUserstableView);
         Scene viewUsersScene = new Scene(usersvbox);
 //      ========================END OF USERS TABLEVIEW INTERFACE===================================================================
-        primarystage.setScene(viewUsersScene);
+//        Universal Menu Button
+        returnBackToMenuButton.setOnAction((e) -> {
+            primarystage.setScene(menuScene);
+        });
+        //        ---------------------------------------
+//      Menu Button Onclick listeners
+        addUserMenuButton.setOnAction((e) -> {
+            primarystage.setScene(addUserScene);    
+        });
+        removeUserMenuButton.setOnAction((e) -> {
+//            primarystage.setScene(removeUserScene);
+        });
+        viewUserMenuButton.setOnAction((e) -> {
+            primarystage.setScene(viewUsersScene);    
+        });
+        purchaseAnimalMenuButton.setOnAction((e) -> {
+            primarystage.setScene(testScene);    
+        });
+        removeAnimalMenuButton.setOnAction((e) -> {
+//            primarystage.setScene(removeAnimalScene);    
+        });
+        viewAnimalMenuButton.setOnAction((e) -> {
+//            primarystage.setScene(viewAnimalScene);    
+        });
+//        ---------------------------------------
+        primarystage.setScene(loginScene);
         primarystage.show();
-//        }
     }
 
     public static void main(String[] args) {
