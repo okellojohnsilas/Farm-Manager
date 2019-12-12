@@ -1,4 +1,4 @@
-package farm_manager;
+package farm;
 
 import java.sql.*;
 
