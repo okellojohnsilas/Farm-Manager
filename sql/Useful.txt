@@ -1,3 +1,0 @@
-I only remember the password for the Jireh Username... This will be useful incase you want to test the login
-USERNAME:Jireh	
-PASSWORD:123

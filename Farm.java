@@ -1,5 +1,8 @@
 package farm;
 
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,6 +21,8 @@ import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -34,7 +39,7 @@ public class Farm extends Application {
         Text a_color = new Text("COLOR: ");
         Text h_type = new Text("HORN TYPE: ");
         Text a_ageGroup = new Text("AGE GROUP: ");
-        Text a_picture = new Text("PICTURE: ");
+//        Text a_picture = new Text("PICTURE: ");
         Text a_price = new Text("PRICE: ");
 //      Creating the TextFields
         TextField a_breedTextField = new TextField();
@@ -56,7 +61,6 @@ public class Farm extends Application {
         a_ageGroupComboBox.setEditable(true);
 //      Creating the Buttons
         Button buyAnimalButton = new Button("BUY");
-//        Button salesAnimalButton = new Button("MENU");
 //      Creating the GridPane
         GridPane buyAnimalgridpane = new GridPane();
 //      Setting up size of Grid pane
@@ -79,8 +83,8 @@ public class Farm extends Application {
         buyAnimalgridpane.add(h_typeComboBox, 1, 6);
         buyAnimalgridpane.add(a_ageGroup, 0, 8);
         buyAnimalgridpane.add(a_ageGroupComboBox, 1, 8);
-//        initialgridpane.add(a_picture, 0, 10);
-//        initialgridpane.add(filechoice,1, 10);
+//        buyAnimalgridpane.add(a_picture, 0, 10);
+//        buyAnimalgridpane.add(browsepicture,1, 10);
         buyAnimalgridpane.add(a_price, 0, 10);
         buyAnimalgridpane.add(a_priceTextField, 1, 10);
         buyAnimalgridpane.add(tagNum, 0, 12);
@@ -136,6 +140,7 @@ public class Farm extends Application {
         Animal cow = new Animal();
         buyAnimalButton.setOnAction((e) -> {
             try {
+//                String picture = (InputStream)fls;
                 cow.purchaseAnimal(tagNumTextField.getText(), a_breedTextField.getText(), a_genderComboBox.getValue().toString(), a_colorTextField.getText(), h_typeComboBox.getValue().toString(), a_ageGroupComboBox.getValue().toString(), a_priceTextField.getText());
                 tagNumTextField.clear();
                 a_breedTextField.clear();
@@ -161,6 +166,7 @@ public class Farm extends Application {
         Button purchaseAnimalMenuButton = new Button("BUY ANIMAL");
         Button saleAnimalMenuButton = new Button("SALE ANIMAL");
         Button viewAnimalMenuButton = new Button("VIEW ANIMALS");
+//        Button viewAnimalMenuButton = new Button("VIEW ANIMALS");
         GridPane menuGridpane = new GridPane();
 //        Labels
 //      Setting up size of Grid pane
@@ -187,24 +193,31 @@ public class Farm extends Application {
         Connection con = (Connection) DriverManager.getConnection(DBconnection.getDatabaseUrl(), DBconnection.getUser(), DBconnection.getPassword());
         Statement stmt = (Statement) con.createStatement();
         ResultSet rs = (ResultSet) stmt.executeQuery("SELECT * FROM `animal`");
-        final ObservableList<UsersDisplay> users = FXCollections.observableArrayList();
-        TableColumn<UsersDisplay, String> column1 = new TableColumn<>("First Name");
-            column1.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("FirstName"));
-            TableColumn<UsersDisplay, String> column2 = new TableColumn<>("Last Name");
-            column2.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("LastName"));
-            TableColumn<UsersDisplay, String> column3 = new TableColumn<>("Username");
-            column3.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("Username"));
-            TableColumn<UsersDisplay, String> column4 = new TableColumn<>("Usertype");
-            column4.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("Usertype"));
-            TableColumn<UsersDisplay, String> column5 = new TableColumn<>("Telephone Number");
-            column5.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("telephone_num"));
-            TableColumn<UsersDisplay, String> column6 = new TableColumn<>("Farm Name");
-            column6.setCellValueFactory(new PropertyValueFactory<UsersDisplay, String>("farm"));
-            TableColumn<UsersDisplay,Button> column7 = new TableColumn<>("Edit");
-            Callback<TableColumn<UsersDisplay,Button>, TableCell<UsersDisplay,Button>> cellFactory = new Callback<TableColumn<UsersDisplay,Button>, TableCell<UsersDisplay,Button>>(){
+//        Animal_ID	Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price	Animal_picture	Animal_Added	Details_Last_Updated
+        final ObservableList<AnimalDisplay> animals = FXCollections.observableArrayList();
+            TableColumn<AnimalDisplay, String> column1 = new TableColumn<>("Tag Number");
+            column1.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("tagNumber"));
+            TableColumn<AnimalDisplay, String> column2 = new TableColumn<>("Animal Breed");
+            column2.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalBreed"));
+            TableColumn<AnimalDisplay, String> column3 = new TableColumn<>("Animal Gender");
+            column3.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalGender"));
+            TableColumn<AnimalDisplay, String> column4 = new TableColumn<>("Animal Color");
+            column4.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalColor"));
+            TableColumn<AnimalDisplay, String> column5 = new TableColumn<>("Animal Type");
+            column5.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalType"));
+            TableColumn<AnimalDisplay, String> column6 = new TableColumn<>("Horn Type");
+            column6.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("hornType"));
+            TableColumn<AnimalDisplay, String> column7 = new TableColumn<>("Age Group");
+            column7.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("ageGroup"));
+            TableColumn<AnimalDisplay, String> column8 = new TableColumn<>("Animal Price");
+            column8.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalPrice"));
+            
+//            The Edit Button
+            TableColumn<AnimalDisplay,Button> column9 = new TableColumn<>("Edit");
+            Callback<TableColumn<AnimalDisplay,Button>, TableCell<AnimalDisplay,Button>> cellFactory = new Callback<TableColumn<AnimalDisplay,Button>, TableCell<AnimalDisplay,Button>>(){
                 @Override
-                public TableCell call(final TableColumn<UsersDisplay,Button> param){
-                    final TableCell<UsersDisplay, String> cell = new TableCell<UsersDisplay, String>() {
+                public TableCell call(final TableColumn<AnimalDisplay,Button> param){
+                    final TableCell<AnimalDisplay, String> cell = new TableCell<AnimalDisplay, String>() {
                     final Button editBtn = new Button("Edit");
                     @Override
                     public void updateItem(String item, boolean empty) {
@@ -215,8 +228,7 @@ public class Farm extends Application {
                         } else {                            
                             setGraphic(editBtn);
                             editBtn.setOnAction((e) -> {
-//                                ResultSet grs = (ResultSet) stmt.executeQuery("SELECT * FROM `users` WHERE `User_ID` = '"+rs.getString("User_ID")+"'");
-//                                farmer.setEdituserInfo(grs.getString("User_ID"));
+//                                farmer.setEdituserInfo(grs.getString("tagNumber"));
 //                                primarystage.setScene(editUserScene);
                             });
                             setText(null);
@@ -226,21 +238,22 @@ public class Farm extends Application {
                 return cell;
                 }
             };
-            column7.setCellFactory(cellFactory);
-            viewAnimaltableView.getColumns().addAll(column1,column2,column3,column4,column5,column6,column7);
+            column9.setCellFactory(cellFactory);
+            viewAnimaltableView.getColumns().addAll(column1,column2,column3,column4,column5,column6,column7,column8,column9);
         while (rs.next()){
-            String storedDbfName = rs.getString("FirstName");
-            String storedDblName = rs.getString("LastName");
-            String storedDbuName = rs.getString("userName");
-            String storedDbuType = rs.getString("userType");
-            String storedDbPhone = rs.getString("user_telephone_number");
-            String storedDbFarmName = rs.getString("Farm_Name");
+            String tagNumber = rs.getString("Tag_Number");
+            String animBreed = rs.getString("Animal_breed");
+            String animGender = rs.getString("Animal_gender");
+            String animColor = rs.getString("Animal_color");
+            String animType = rs.getString("Animal_type");
+            String animHornType = rs.getString("Horn_type");
+            String animAgeGroup = rs.getString("Age_group");
+            String animPrice = rs.getString("Animal_price");
             Button editBtn = new Button("Edit");
-            UsersDisplay user = new UsersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName,editBtn);
-            users.add(user);            
-//            viewUserstableView.getItems().addAll(new UsersDisplay(storedDbfName,storedDblName,storedDbuName,storedDbuType,storedDbPhone,storedDbFarmName));
+            AnimalDisplay cows = new AnimalDisplay(tagNumber.toUpperCase(),animBreed,animGender,animColor,animType,animHornType,animAgeGroup,animPrice,editBtn);
+            animals.add(cows);
         }
-        viewAnimaltableView.setItems(users);
+        viewAnimaltableView.setItems(animals);
         VBox usersvbox = new VBox(viewAnimaltableView);
         Scene viewanimalsScene = new Scene(usersvbox);
 //      ========================END OF ANIMAL TABLEVIEW INTERFACE===================================================================
