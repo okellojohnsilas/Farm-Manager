@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS farm;
 USE farm;
 
+DROP TABLE IF EXISTS animal;
 CREATE TABLE IF NOT EXISTS animal(
   Animal_ID int(17) NOT NULL AUTO_INCREMENT,
   Tag_Number VARCHAR(17) NOT NULL DEFAULT '',
@@ -11,13 +12,13 @@ CREATE TABLE IF NOT EXISTS animal(
   Horn_type TEXT NOT NULL DEFAULT '',
   Age_group TEXT NOT NULL DEFAULT '',
   Animal_price TEXT NOT NULL DEFAULT '',
-  Animal_picture TEXT,
   Animal_Added timestamp NOT NULL DEFAULT current_timestamp(),
   Details_Last_Updated timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY(Animal_ID),
   UNIQUE KEY(Tag_Number)
   );
 
+DROP TABLE IF EXISTS farm;
 CREATE TABLE IF NOT EXISTS farm(
    Farm_ID int(17) NOT NULL AUTO_INCREMENT,
    Farm_Name varchar(150) NOT NULL DEFAULT '',
@@ -25,6 +26,7 @@ CREATE TABLE IF NOT EXISTS farm(
   PRIMARY KEY (Farm_ID)
   );
 
+DROP TABLE IF EXISTS sales;
 CREATE TABLE IF NOT EXISTS sales(
    SalesID int(17) NOT NULL AUTO_INCREMENT,
    Tag_Number varchar(15) NOT NULL DEFAULT '',

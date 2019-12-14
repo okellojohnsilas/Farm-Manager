@@ -5,8 +5,6 @@
  */
 package farm;
 
-import javafx.scene.control.Button;
-
 /**
  *
  * @author Okello John
@@ -20,9 +18,8 @@ public class AnimalDisplay {
     private String hornType = null;
     private String ageGroup = null;
     private String animalPrice = null;
-    private Button editBtn;
 
-    public AnimalDisplay(String tag_Number, String animal_breed, String animal_gender, String animal_color, String animal_type, String horn_type, String age_group, String animal_price, Button editBtn) {
+    public AnimalDisplay(String tag_Number, String animal_breed, String animal_gender, String animal_color, String animal_type, String horn_type, String age_group, String animal_price) {
         this.tagNumber = tag_Number;
         this.animalBreed = animal_breed;
         this.animalGender = animal_gender;
@@ -31,7 +28,6 @@ public class AnimalDisplay {
         this.hornType = horn_type;
         this.ageGroup = age_group;
         this.animalPrice = animal_price;
-        this.editBtn = editBtn;
     }
     
     public String getTagNumber() {
@@ -96,13 +92,5 @@ public class AnimalDisplay {
 
     public void setAnimalPrice(String animalPrice) {
         this.animalPrice = animalPrice;
-    }
-
-    public Button getEditBtn() {
-        return editBtn;
-    }
-
-    public void setEditBtn(Button editBtn) {
-        this.editBtn = editBtn;
     }
 }
