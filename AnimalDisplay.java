@@ -19,6 +19,7 @@ public class AnimalDisplay {
     private String ageGroup = null;
     private String animalPrice = null;
 
+    public AnimalDisplay(){}
     public AnimalDisplay(String tag_Number, String animal_breed, String animal_gender, String animal_color, String animal_type, String horn_type, String age_group, String animal_price) {
         this.tagNumber = tag_Number;
         this.animalBreed = animal_breed;

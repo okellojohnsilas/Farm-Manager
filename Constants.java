@@ -11,16 +11,16 @@ public class Constants {
     public static final String DATABASE_URL = "jdbc:mysql://localhost:3306/Farm?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public static final String USER = "root";
     public static final String PASSWORD ="";
-    public String getDriver(){
+    public  String getDriver(){
         return DRIVER;
     }
-    public String getDatabaseUrl(){
+    public  String getDatabaseUrl(){
         return DATABASE_URL;
     }
-    public String getUser(){
+    public  String getUser(){
         return USER;
     }
-    public String getPassword(){
+    public  String getPassword(){
         return PASSWORD;
     }
 //  ========================================End of Database Constants===========================================================================================================

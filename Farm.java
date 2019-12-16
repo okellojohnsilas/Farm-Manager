@@ -8,8 +8,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -19,7 +17,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -30,11 +30,11 @@ public class Farm extends Application {
         Button returnBackToMenuButton = new Button("BACK TO MENU");
 //      ========================BUY ANIMAL INTERFACE==============================================================  
 //      Text displayed
-        Text firstusermessage = new Text("");
         Text tagNum = new Text("TAG NUMBER: ");
-        Text a_breed = new Text("BREED: ");
+        Text a_breed = new Text("ANIMAL BREED: ");
         Text a_gender = new Text("GENDER: ");
         Text a_color = new Text("COLOR: ");
+        Text a_type = new Text("ANIMAL TYPE: ");
         Text h_type = new Text("HORN TYPE: ");
         Text a_ageGroup = new Text("AGE GROUP: ");
         Text a_price = new Text("PRICE: ");
@@ -48,16 +48,21 @@ public class Farm extends Application {
         ComboBox a_genderComboBox = new ComboBox();
         a_genderComboBox.getItems().addAll("Male", "Female");
         a_genderComboBox.setEditable(false);
+//        Animal Type ComboBox
+        ComboBox a_typeComboBox = new ComboBox();
+        a_typeComboBox.getItems().addAll("Cow", "Goat", "Sheep");
+        a_typeComboBox.setEditable(true);
 //        Horntype ComboBox
         ComboBox h_typeComboBox = new ComboBox();
         h_typeComboBox.getItems().addAll("Short", "Long", "None");
         h_typeComboBox.setEditable(true);
 //        Agegroup ComboBox
         ComboBox a_ageGroupComboBox = new ComboBox();
-        a_ageGroupComboBox.getItems().addAll("Mature", "Calf", "Youngling");
+        a_ageGroupComboBox.getItems().addAll("Old", "Prime", "Young");
         a_ageGroupComboBox.setEditable(true);
 //      Creating the Buttons
         Button buyAnimalButton = new Button("BUY");
+        Button leaveAndReturnButton = new Button("BACK TO MENU");
 //      Creating the GridPane
         GridPane buyAnimalgridpane = new GridPane();
 //      Setting up size of Grid pane
@@ -76,18 +81,19 @@ public class Farm extends Application {
         buyAnimalgridpane.add(a_genderComboBox, 1, 2);
         buyAnimalgridpane.add(a_color, 0, 4);
         buyAnimalgridpane.add(a_colorTextField, 1, 4);
-        buyAnimalgridpane.add(h_type, 0, 6);
-        buyAnimalgridpane.add(h_typeComboBox, 1, 6);
-        buyAnimalgridpane.add(a_ageGroup, 0, 8);
-        buyAnimalgridpane.add(a_ageGroupComboBox, 1, 8);
-        buyAnimalgridpane.add(a_price, 0, 10);
-        buyAnimalgridpane.add(a_priceTextField, 1, 10);
-        buyAnimalgridpane.add(tagNum, 0, 12);
-        buyAnimalgridpane.add(tagNumTextField, 1, 12);
-        buyAnimalgridpane.add(firstusermessage, 1, 14);
+        buyAnimalgridpane.add(a_type, 0, 6);
+        buyAnimalgridpane.add(a_typeComboBox, 1, 6);
+        buyAnimalgridpane.add(h_type, 0, 8);
+        buyAnimalgridpane.add(h_typeComboBox, 1, 8);
+        buyAnimalgridpane.add(a_ageGroup, 0, 10);
+        buyAnimalgridpane.add(a_ageGroupComboBox, 1, 10);
+        buyAnimalgridpane.add(a_price, 0, 12);
+        buyAnimalgridpane.add(a_priceTextField, 1, 12);
+        buyAnimalgridpane.add(tagNum, 0, 14);
+        buyAnimalgridpane.add(tagNumTextField, 1, 14);
+//        buyAnimalgridpane.add(firstusermessage, 1, 14);
         buyAnimalgridpane.add(buyAnimalButton, 1, 16);
-//        buyAnimalgridpane.add(salesAnimalButton, 2, 16);
-        buyAnimalgridpane.add(returnBackToMenuButton, 2, 18);
+        buyAnimalgridpane.add(leaveAndReturnButton, 1, 18);
         Scene buyAnimalScene = new Scene(buyAnimalgridpane);
 //      ========================END OF BUY ANIMAL INTERFACE==============================================================
 //      ========================SALE ANIMAL INTERFACE====================================================================
@@ -104,7 +110,7 @@ public class Farm extends Application {
         TextField buyerContactTextField = new TextField();
 //      Creating the Buttons
         Button saleAnimalButton = new Button("SALE ANIMAL");
-        Button backButton = new Button("MENU");
+        Button backButton = new Button("BACK TO MENU");
 //      Instatiating the Gridpane
         GridPane salesgridpane = new GridPane();
 //      Setting up size of Grid pane
@@ -135,8 +141,7 @@ public class Farm extends Application {
         Animal cow = new Animal();
         buyAnimalButton.setOnAction((e) -> {
             try {
-//                String picture = (InputStream)fls;
-                cow.purchaseAnimal(tagNumTextField.getText(), a_breedTextField.getText(), a_genderComboBox.getValue().toString(), a_colorTextField.getText(), h_typeComboBox.getValue().toString(), a_ageGroupComboBox.getValue().toString(), a_priceTextField.getText());
+                cow.purchaseAnimal(tagNumTextField.getText(), a_breedTextField.getText(), a_genderComboBox.getValue().toString(), a_colorTextField.getText(),a_typeComboBox.getValue().toString(), h_typeComboBox.getValue().toString(), a_ageGroupComboBox.getValue().toString(), a_priceTextField.getText());
                 tagNumTextField.clear();
                 a_breedTextField.clear();
                 a_colorTextField.clear();
@@ -161,6 +166,7 @@ public class Farm extends Application {
         Button purchaseAnimalMenuButton = new Button("BUY ANIMAL");
         Button saleAnimalMenuButton = new Button("SALE ANIMAL");
         Button viewAnimalMenuButton = new Button("VIEW ANIMALS");
+        Button addNewAnimalButton = new Button("ADD ANIMAL");
         GridPane menuGridpane = new GridPane();
 //      Setting up size of Grid pane
         menuGridpane.setMinSize(600, 400);
@@ -176,11 +182,13 @@ public class Farm extends Application {
         menuGridpane.add(purchaseAnimalMenuButton, 2, 0);
         menuGridpane.add(removeAnimalMenuButton, 1, 4);
         menuGridpane.add(viewAnimalMenuButton, 2, 4);
+        menuGridpane.add(addNewAnimalButton, 1, 5);
         Scene menuScene = new Scene(menuGridpane);
 //      ========================END OF MENU INTERFACE===============================================================================
 //      ========================REMOVE ANIMAL INTERFACE=============================================================================
 //        Buttons
         Button removeAnimButton = new Button("REMOVE");
+        Button backToMenuButton = new Button("BACK TO MENU");
 //        Labels
         Label AnimTagLabel = new Label("TAG NUMBER");
 //        TextFields
@@ -197,10 +205,17 @@ public class Farm extends Application {
 //      Setting the grid alignment
         removeAnimGridpane.setAlignment(Pos.CENTER);
 //      Arranging all the nodes on the grid
-        removeAnimGridpane.add(AnimTagLabel, 1, 1);
-        removeAnimGridpane.add(removeAnimTextField, 2, 1);
-        removeAnimGridpane.add(removeAnimButton, 2, 2);
-        removeAnimGridpane.add(returnBackToMenuButton, 2, 3);
+        removeAnimGridpane.add(AnimTagLabel, 0, 0);
+        removeAnimGridpane.add(removeAnimTextField, 1, 0);
+        removeAnimGridpane.add(removeAnimButton, 1, 2);
+        removeAnimGridpane.add(backToMenuButton, 1, 4);
+        removeAnimButton.setOnAction((e) -> {
+            cow.removeAnimal(removeAnimTextField.getText());
+            removeAnimTextField.clear();
+        });
+        backToMenuButton.setOnAction((e) -> {
+            primarystage.setScene(menuScene);
+        });
         Scene removeAnimScene = new Scene(removeAnimGridpane);
 //      ========================END OF REMOVE ANIMAL INTERFACE======================================================================
 //      ========================ANIMAL TABLEVIEW INTERFACE==========================================================================
@@ -212,50 +227,60 @@ public class Farm extends Application {
         Statement stmt = (Statement) con.createStatement();
         ResultSet rs = (ResultSet) stmt.executeQuery("SELECT * FROM `animal`");
 //        Animal_ID	Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price	Animal_picture	Animal_Added	Details_Last_Updated
-        final ObservableList<AnimalDisplay> animals = FXCollections.observableArrayList();
         TableColumn<AnimalDisplay, String> column1 = new TableColumn<>("Tag Number");
-        column1.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("tagNumber"));
+        column1.setCellValueFactory(new PropertyValueFactory<>("tagNumber"));
         TableColumn<AnimalDisplay, String> column2 = new TableColumn<>("Animal Breed");
-        column2.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalBreed"));
+        column2.setCellValueFactory(new PropertyValueFactory<>("animalBreed"));
         TableColumn<AnimalDisplay, String> column3 = new TableColumn<>("Animal Gender");
-        column3.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalGender"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("animalGender"));
         TableColumn<AnimalDisplay, String> column4 = new TableColumn<>("Animal Color");
-        column4.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalColor"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("animalColor"));
         TableColumn<AnimalDisplay, String> column5 = new TableColumn<>("Animal Type");
-        column5.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalType"));
+        column5.setCellValueFactory(new PropertyValueFactory<>("animalType"));
         TableColumn<AnimalDisplay, String> column6 = new TableColumn<>("Horn Type");
-        column6.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("hornType"));
+        column6.setCellValueFactory(new PropertyValueFactory<>("hornType"));
         TableColumn<AnimalDisplay, String> column7 = new TableColumn<>("Age Group");
-        column7.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("ageGroup"));
+        column7.setCellValueFactory(new PropertyValueFactory<>("ageGroup"));
         TableColumn<AnimalDisplay, String> column8 = new TableColumn<>("Animal Price");
-        column8.setCellValueFactory(new PropertyValueFactory<AnimalDisplay, String>("animalPrice"));
-
-//            The Edit Button
-        TableColumn<AnimalDisplay, Button> column9 = new TableColumn<>("Edit");
+        column8.setCellValueFactory(new PropertyValueFactory<>("animalPrice"));
+//        The Edit Button
+        TableColumn<AnimalDisplay, Button> column9 = new TableColumn<>("ACTIONS");
         Callback<TableColumn<AnimalDisplay, Button>, TableCell<AnimalDisplay, Button>> cellFactory = new Callback<TableColumn<AnimalDisplay, Button>, TableCell<AnimalDisplay, Button>>() {
             @Override
             public TableCell call(final TableColumn<AnimalDisplay, Button> param) {
                 final TableCell<AnimalDisplay, String> cell = new TableCell<AnimalDisplay, String>() {
-                    final Button editBtn = new Button("Edit");
-
+                    final Button editBtn = new Button("EDIT");
+                    final Button delBtn = new Button("DELETE");
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                             setText(null);
-                        } else {
-                            setGraphic(editBtn);
+                        }
+                        else {
+                            HBox pane = new HBox(editBtn, delBtn);
+                            setGraphic(pane);
                             editBtn.setOnAction((e) -> {
-                                AnimalDisplay a = getTableView().getItems().get(getIndex());
-                                final Dialog d = new Dialog();
-                                d.setTitle("Edit animal");
-                                d.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-                                Node closeButton = d.getDialogPane().lookupButton(ButtonType.CLOSE);
-                                closeButton.managedProperty().bind(closeButton.visibleProperty());
-                                closeButton.setVisible(false);
-                                d.getDialogPane().setContent(Farm.editAnimal(a));
-                                d.showAndWait();
+                                    AnimalDisplay a = getTableView().getItems().get(getIndex());
+//                                    System.out.println(a);
+                                    final Dialog d = new Dialog();
+                                    d.setTitle("Edit animal");
+                                    d.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                                    Node closeButton = d.getDialogPane().lookupButton(ButtonType.CLOSE);
+                                    closeButton.managedProperty().bind(closeButton.visibleProperty());
+                                    closeButton.setVisible(false);
+                                    d.getDialogPane().setContent(Farm.editAnimal(a));
+                                    System.out.println(a);
+                                    d.showAndWait();
+                            });
+                            delBtn.setOnAction((e) -> {
+                                Alert alert = new Alert(AlertType.CONFIRMATION, "ARE YOU SURE?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+                                alert.showAndWait();
+                                if (alert.getResult() == ButtonType.YES) {
+                                    AnimalDisplay a = getTableView().getItems().get(getIndex());
+                                    Farm.deleteAnimal(a);
+                                }
                             });
                             setText(null);
                         }
@@ -266,21 +291,10 @@ public class Farm extends Application {
         };
         column9.setCellFactory(cellFactory);
         viewAnimaltableView.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9);
-        while (rs.next()) {
-            String tagNumber = rs.getString("Tag_Number");
-            String animBreed = rs.getString("Animal_breed");
-            String animGender = rs.getString("Animal_gender");
-            String animColor = rs.getString("Animal_color");
-            String animType = rs.getString("Animal_type");
-            String animHornType = rs.getString("Horn_type");
-            String animAgeGroup = rs.getString("Age_group");
-            String animPrice = rs.getString("Animal_price");
-            AnimalDisplay cows = new AnimalDisplay(tagNumber.toUpperCase(), animBreed, animGender, animColor, animType, animHornType, animAgeGroup, animPrice);
-            animals.add(cows);
-        }
-        viewAnimaltableView.setItems(animals);
+        viewAnimaltableView.setItems(cow.viewAnimals());
         VBox usersvbox = new VBox();
         usersvbox.setSpacing(5);
+        usersvbox.setMinSize(1000, 1000);
         usersvbox.setPadding(new Insets(10, 0, 0, 10));
         usersvbox.getChildren().addAll(returnBackToMenuButton, viewAnimaltableView);
         Scene viewanimalsScene = new Scene(new Group());
@@ -295,21 +309,49 @@ public class Farm extends Application {
             primarystage.setScene(buyAnimalScene);
         });
         removeAnimalMenuButton.setOnAction((e) -> {
-            primarystage.setScene(salesScene);
+            primarystage.setScene(removeAnimScene);
         });
         viewAnimalMenuButton.setOnAction((e) -> {
+//            refreshTableView();
             primarystage.setScene(viewanimalsScene);
         });
 //        ---------------------------------------
-//        salesAnimalButton.setOnAction(e -> {
-//            primarystage.setScene(menuScene);
-//        });
+        saleAnimalMenuButton.setOnAction(e -> {
+            primarystage.setScene(salesScene);
+        });
         backButton.setOnAction((e) -> {
             primarystage.setScene(menuScene);
         });
 //        ---------------------------------------
-        primarystage.setScene(removeAnimScene);
+        leaveAndReturnButton.setOnAction((e) -> {
+            primarystage.setScene(menuScene);
+        });
+        primarystage.setScene(menuScene);
         primarystage.show();
+    }
+    
+    public static String deleteAnimal(AnimalDisplay t_number){
+        Constants dbConn = new Constants();
+        Alert successalert = new Alert(Alert.AlertType.INFORMATION);
+        Alert failurealert = new Alert(Alert.AlertType.INFORMATION);
+        try {  
+            Class.forName(dbConn.getDriver());
+            Connection con = (Connection)DriverManager.getConnection(dbConn.getDatabaseUrl(),dbConn.getUser(),dbConn.getPassword());
+            Statement stmt = (Statement)con.createStatement();
+            stmt.executeUpdate("DELETE FROM animal WHERE Tag_Number ='"+t_number.getTagNumber()+"'");
+            System.out.println(t_number.getTagNumber());
+            successalert.setTitle("ADD STATUS");
+            successalert.setHeaderText(null);
+            successalert.setContentText("ANIMAL REMOVED FROM DATABASE SUCCESSFULLY");
+            successalert.showAndWait();
+        }catch(ClassNotFoundException | SQLException e ){
+            failurealert.setTitle("FAILED");
+            failurealert.setHeaderText(null);
+            failurealert.setContentText(e.toString());
+            failurealert.showAndWait();
+            System.out.println(e);
+        }
+        return "Success";
     }
 
     public static GridPane editAnimal(AnimalDisplay editAnimal) {
@@ -320,7 +362,6 @@ public class Farm extends Application {
         Text a_color = new Text("COLOR: ");
         Text h_type = new Text("HORN TYPE: ");
         Text a_ageGroup = new Text("AGE GROUP: ");
-//        Text a_picture = new Text("PICTURE: ");
         Text a_price = new Text("PRICE: ");
 //      Creating the TextFields
         TextField a_breedTextField = new TextField();
