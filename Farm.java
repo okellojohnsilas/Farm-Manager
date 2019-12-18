@@ -182,7 +182,7 @@ public class Farm extends Application {
         menuGridpane.add(purchaseAnimalMenuButton, 2, 0);
         menuGridpane.add(removeAnimalMenuButton, 1, 4);
         menuGridpane.add(viewAnimalMenuButton, 2, 4);
-        menuGridpane.add(addNewAnimalButton, 1, 5);
+        menuGridpane.add(addNewAnimalButton, 1, 8);
         Scene menuScene = new Scene(menuGridpane);
 //      ========================END OF MENU INTERFACE===============================================================================
 //      ========================REMOVE ANIMAL INTERFACE=============================================================================
@@ -259,8 +259,9 @@ public class Farm extends Application {
                             setText(null);
                         }
                         else {
-                            HBox pane = new HBox(editBtn, delBtn);
-                            setGraphic(pane);
+                            HBox buttonPane = new HBox(editBtn, delBtn);
+                            buttonPane.setSpacing(10);
+                            setGraphic(buttonPane);
                             editBtn.setOnAction((e) -> {
                                     AnimalDisplay a = getTableView().getItems().get(getIndex());
 //                                    System.out.println(a);
@@ -296,10 +297,85 @@ public class Farm extends Application {
         usersvbox.setSpacing(5);
         usersvbox.setMinSize(1000, 1000);
         usersvbox.setPadding(new Insets(10, 0, 0, 10));
-        usersvbox.getChildren().addAll(returnBackToMenuButton, viewAnimaltableView);
+        Button reLoadTable = new Button("REFRESH TABLE");
+        HBox topPane = new HBox(returnBackToMenuButton, reLoadTable);
+        topPane.setSpacing(30);
+        usersvbox.getChildren().addAll(topPane,viewAnimaltableView);
         Scene viewanimalsScene = new Scene(new Group());
         ((Group) viewanimalsScene.getRoot()).getChildren().addAll(usersvbox);
 //      ========================END OF ANIMAL TABLEVIEW INTERFACE===================================================================
+//      ========================ADD ANIMAL INTERFACE================================================================================
+    //      Text displayed
+        Text animalTagNum = new Text("TAG NUMBER: ");
+        Text animalBreed = new Text("ANIMAL BREED: ");
+        Text animalGender = new Text("GENDER: ");
+        Text animalColor = new Text("COLOR: ");
+        Text animalType = new Text("ANIMAL TYPE: ");
+        Text animalHornType = new Text("HORN TYPE: ");
+        Text animalAgeGroup = new Text("AGE GROUP: ");
+//      Creating the TextFields
+        TextField animalBreedTextField = new TextField();
+        TextField animalColorTextField = new TextField();
+        TextField animalTagNumTextField = new TextField();
+//      ComboBox Section
+//      Gender ComboBox
+        ComboBox animalGenderComboBox = new ComboBox();
+        animalGenderComboBox.getItems().addAll("Male", "Female");
+        animalGenderComboBox.setEditable(false);
+//        Animal Type ComboBox
+        ComboBox animalTypeComboBox = new ComboBox();
+        animalTypeComboBox.getItems().addAll("Cow", "Goat", "Sheep");
+        animalTypeComboBox.setEditable(true);
+//        Horntype ComboBox
+        ComboBox animalHornTypeComboBox = new ComboBox();
+        animalHornTypeComboBox.getItems().addAll("Short", "Long", "None");
+        animalHornTypeComboBox.setEditable(true);
+//        Agegroup ComboBox
+        ComboBox animalAgeGroupComboBox = new ComboBox();
+        animalAgeGroupComboBox.getItems().addAll("Old", "Prime", "Young");
+        animalAgeGroupComboBox.setEditable(true);
+//      Creating the Buttons
+        Button addAnimalButton = new Button("ADD");
+        Button ToMenuButton = new Button("BACK TO MENU");
+//      Creating the GridPane
+        GridPane addAnimalgridpane = new GridPane();
+//      Setting up size of Grid pane
+        addAnimalgridpane.setMinSize(600, 400);
+//      Setting the Padding
+        addAnimalgridpane.setPadding(new Insets(10, 10, 10, 10));
+//      Setting the vertical and horizontal gaps between the columns
+        addAnimalgridpane.setVgap(10);
+        addAnimalgridpane.setHgap(10);
+//      Setting the grid alignment
+        addAnimalgridpane.setAlignment(Pos.CENTER);
+//      Arranging all the nodes on the grid
+        addAnimalgridpane.add(animalBreed, 0, 0);
+        addAnimalgridpane.add(animalBreedTextField, 1, 0);
+        addAnimalgridpane.add(animalGender, 0, 2);
+        addAnimalgridpane.add(animalGenderComboBox, 1, 2);
+        addAnimalgridpane.add(animalColor, 0, 4);
+        addAnimalgridpane.add(animalColorTextField, 1, 4);
+        addAnimalgridpane.add(animalType, 0, 6);
+        addAnimalgridpane.add(animalTypeComboBox, 1, 6);
+        addAnimalgridpane.add(animalHornType, 0, 8);
+        addAnimalgridpane.add(animalHornTypeComboBox, 1, 8);
+        addAnimalgridpane.add(animalAgeGroup, 0, 10);
+        addAnimalgridpane.add(animalAgeGroupComboBox, 1, 10);
+        addAnimalgridpane.add(animalTagNum, 0, 12);
+        addAnimalgridpane.add(animalTagNumTextField, 1, 12);
+        addAnimalgridpane.add(addAnimalButton, 1, 14);
+        addAnimalgridpane.add(ToMenuButton, 1, 16);
+        Scene addAnimalScene = new Scene(addAnimalgridpane);
+//      ========================END OF ADD ANIMAL INTERFACE=========================================================================
+//        addAnimalButton onclick Listener
+        addAnimalButton.setOnAction((e) -> {
+            try {
+                //            Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price
+                cow.addAnimal(animalTagNumTextField.getText(), animalBreedTextField.getText(), animalGenderComboBox.getValue().toString(), animalColorTextField.getText(),animalTypeComboBox.getValue().toString(), animalHornTypeComboBox.getValue().toString(), animalAgeGroupComboBox.getValue().toString());
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Farm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 //        Universal Menu Button
         returnBackToMenuButton.setOnAction((e) -> {
             primarystage.setScene(menuScene);
@@ -325,6 +401,12 @@ public class Farm extends Application {
 //        ---------------------------------------
         leaveAndReturnButton.setOnAction((e) -> {
             primarystage.setScene(menuScene);
+        });
+        ToMenuButton.setOnAction((e) -> {
+            primarystage.setScene(menuScene);
+        });
+        addNewAnimalButton.setOnAction((e) -> {
+            primarystage.setScene(addAnimalScene);
         });
         primarystage.setScene(menuScene);
         primarystage.show();
