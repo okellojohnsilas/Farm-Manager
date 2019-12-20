@@ -7,24 +7,40 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.application.Platform;
 
 public class Farm extends Application {
 
+    private ObservableList<Animal> observableNames;
+    private Animal connect = new Animal();
+    public Farm() {
+        try {
+            observableNames = FXCollections.observableArrayList(connect.viewAnimals());
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Farm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     @Override
     public void start(Stage primarystage) throws Exception {
         Button returnBackToMenuButton = new Button("BACK TO MENU");
@@ -167,6 +183,11 @@ public class Farm extends Application {
         Button saleAnimalMenuButton = new Button("SALE ANIMAL");
         Button viewAnimalMenuButton = new Button("VIEW ANIMALS");
         Button addNewAnimalButton = new Button("ADD ANIMAL");
+        Button exitApp = new Button("EXIT FARM MANAGER");
+        exitApp.setStyle("-fx-background-color: #F08080;-fx-text-fill: #0000ff;-fx-font-size: 1.5em;");
+        exitApp.setOnAction((e) -> {
+            primarystage.close();
+        });
         GridPane menuGridpane = new GridPane();
 //      Setting up size of Grid pane
         menuGridpane.setMinSize(600, 400);
@@ -183,6 +204,7 @@ public class Farm extends Application {
         menuGridpane.add(removeAnimalMenuButton, 1, 4);
         menuGridpane.add(viewAnimalMenuButton, 2, 4);
         menuGridpane.add(addNewAnimalButton, 1, 8);
+        menuGridpane.add(exitApp, 1, 12);
         Scene menuScene = new Scene(menuGridpane);
 //      ========================END OF MENU INTERFACE===============================================================================
 //      ========================REMOVE ANIMAL INTERFACE=============================================================================
@@ -298,6 +320,21 @@ public class Farm extends Application {
         usersvbox.setMinSize(1000, 1000);
         usersvbox.setPadding(new Insets(10, 0, 0, 10));
         Button reLoadTable = new Button("REFRESH TABLE");
+        reLoadTable.setOnAction((e) -> {
+            try {
+//                System.out.println("Restarting the program");
+                primarystage.close();
+                Platform.runLater( () -> {
+                    try {
+                        new Farm().start( new Stage() );
+                    } catch (Exception ex) {
+                        Logger.getLogger(Farm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } );
+            } catch (Exception ex) {
+                Logger.getLogger(Farm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         HBox topPane = new HBox(returnBackToMenuButton, reLoadTable);
         topPane.setSpacing(30);
         usersvbox.getChildren().addAll(topPane,viewAnimaltableView);
@@ -372,6 +409,13 @@ public class Farm extends Application {
             try {
                 //            Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price
                 cow.addAnimal(animalTagNumTextField.getText(), animalBreedTextField.getText(), animalGenderComboBox.getValue().toString(), animalColorTextField.getText(),animalTypeComboBox.getValue().toString(), animalHornTypeComboBox.getValue().toString(), animalAgeGroupComboBox.getValue().toString());
+                animalTagNumTextField.clear();
+                animalBreedTextField.clear();
+                animalGenderComboBox.getSelectionModel().clearSelection();
+                animalColorTextField.clear();
+                animalTypeComboBox.getSelectionModel().clearSelection();
+                animalHornTypeComboBox.getSelectionModel().clearSelection();
+                animalAgeGroupComboBox.getSelectionModel().clearSelection();
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(Farm.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -12,7 +12,7 @@ public class Animal extends Constants{
         Connection con = (Connection)DriverManager.getConnection(getDatabaseUrl(),getUser(),getPassword());
         Statement stmt = (Statement)con.createStatement();
 //        Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price
-        stmt.executeUpdate("INSERT INTO animal(Tag_Number,Animal_breed,Animal_gender,Animal_color,Animal_type,Horn_type,Age_group,Animal_price) VALUES('"+T_number+"','"+A_breed+"','"+A_gender+"','"+A_color+"','"+A_type+"','"+H_type+"','"+A_group+"','"+A_price+"')");
+        stmt.executeUpdate("INSERT INTO animal(Tag_Number,Animal_breed,Animal_gender,Animal_color,Animal_type,Horn_type,Age_group,Animal_price) VALUES('"+T_number.toUpperCase()+"','"+A_breed+"','"+A_gender+"','"+A_color+"','"+A_type+"','"+H_type+"','"+A_group+"','"+A_price+"')");
         successalert.setTitle("ADD STATUS");
         successalert.setHeaderText(null);
         successalert.setContentText(T_number+" WAS PURCHASED SUCCESSFULLY");
@@ -79,7 +79,7 @@ public class Animal extends Constants{
         Connection con = (Connection)DriverManager.getConnection(getDatabaseUrl(),getUser(),getPassword());
         Statement stmt = (Statement)con.createStatement();
 //        Tag_Number	Animal_breed	Animal_gender	Animal_color	Animal_type	Horn_type	Age_group	Animal_price
-        stmt.executeUpdate("INSERT INTO animal(Tag_Number,Animal_breed,Animal_gender,Animal_color,Animal_type,Horn_type,Age_group,Animal_price) VALUES('"+T_number+"','"+A_breed+"','"+A_gender+"','"+A_color+"','"+A_type+"','"+H_type+"','"+A_group+"','ADDED BY FARMER')");
+        stmt.executeUpdate("INSERT INTO animal(Tag_Number,Animal_breed,Animal_gender,Animal_color,Animal_type,Horn_type,Age_group,Animal_price) VALUES('"+T_number.toUpperCase()+"','"+A_breed+"','"+A_gender+"','"+A_color+"','"+A_type+"','"+H_type+"','"+A_group+"','ADDED BY FARMER')");
         successalert.setTitle("ADD STATUS");
         successalert.setHeaderText(null);
         successalert.setContentText(T_number+" WAS ADDED TO DATABASE SUCCESSFULLY");
